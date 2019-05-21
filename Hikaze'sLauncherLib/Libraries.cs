@@ -42,7 +42,7 @@ namespace LauncherLib
         public static bool DownloadLib(Libraries lib, string GamePath)
         {
             if (lib.url != null){
-                if (Downloader.createdir(lib.fullPath) == 1)
+                if (Downloader.CreateDir(lib.fullPath) == 1)
                 {
                     Downloader.download(lib.url, GamePath + lib.fullPath);
                 }
