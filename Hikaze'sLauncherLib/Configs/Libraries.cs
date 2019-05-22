@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Exceptions;
+using LauncherLib.Lang;
 using LauncherLib.Download;
 using System.IO;
 using System.Diagnostics;
-namespace LauncherLib
+using LauncherLib.ArgHandler;
+
+namespace LauncherLib.Configs
 {
     /// <summary>
     /// 对libraries类的操作

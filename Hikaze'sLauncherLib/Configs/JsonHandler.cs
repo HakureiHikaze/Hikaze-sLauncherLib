@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace LauncherLib
+namespace LauncherLib.Configs
 {
     public static class JsonHandler
     {

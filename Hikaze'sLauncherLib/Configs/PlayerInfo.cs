@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LauncherLib
+namespace LauncherLib.Configs
 {
     public class PlayerInfo
     {

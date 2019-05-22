@@ -10,15 +10,19 @@ using System.IO;
 using System.Diagnostics;
 using System.Net;
 using System.Security.Cryptography;
+using LauncherLib.Lang.Event;
 
 namespace LauncherLib.Download
 {
     public static class Downloader
     {
-        public static void download(string URL, string LocalPath)
+        public delegate void DownloadInfoHandler(DownloadInfo info);
+        public static  DownloadInfoHandler OnDownloadInfoChange;
+        public static void SimpleDownload(string URL, string LocalPath)
         {
-            System.Net.WebClient DownloadClient = new System.Net.WebClient();
+            WebClient DownloadClient = new WebClient();
             DownloadClient.DownloadFile(URL, LocalPath);
+            
         }
         public static int CreateDir(string FullPath)
 
@@ -48,7 +52,7 @@ namespace LauncherLib.Download
                     return 1;
                 }
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.WriteLine("Problem occurred: " + e.Message);
                 return -1;
@@ -86,8 +90,13 @@ namespace LauncherLib.Download
         /// 下载文件方法
         /// 文件保存路径和文件名
         /// 返回服务器文件名
+        public static void DownloadFileFromTask(DownloadTask task)
+        {
+            DownloadFile(task.url, task.localPath);
+        }
         public static bool DownloadFile(string sourceFile, string desFile)
         {
+            DownloadInfo info;
             bool flag = false;
             long SPosition = 0;
             FileStream FStream = null;
@@ -103,6 +112,8 @@ namespace LauncherLib.Download
             }
             try
             {
+                long downloadProgress =0;
+                long serverFileLength = GetHttpLength(sourceFile);
                 //判断要下载的文件夹是否存在
                 if (File.Exists(desFile))
                 {
@@ -110,9 +121,12 @@ namespace LauncherLib.Download
                     FStream = File.OpenWrite(desFile);
                     //获取已经下载的长度
                     SPosition = FStream.Length;
-                    long serverFileLength = GetHttpLength(sourceFile);
+                    downloadProgress = SPosition;
+                    info = new DownloadInfo(sourceFile, desFile, SPosition / (double)serverFileLength);
                     if (SPosition == serverFileLength)
                     {//文件是完整的，直接结束下载任务
+                        
+                        OnDownloadInfoChange(info);
                         return true;
                     }
                     FStream.Seek(SPosition, SeekOrigin.Current);
@@ -122,6 +136,8 @@ namespace LauncherLib.Download
                     //文件不保存创建一个文件
                     FStream = new FileStream(desFile, FileMode.Create);
                     SPosition = 0;
+                    info = new DownloadInfo(sourceFile, desFile, 0d);
+                    OnDownloadInfoChange(info);
                 }
                 //打开网络连接
                 HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(sourceFile);
@@ -132,13 +148,16 @@ namespace LauncherLib.Download
                 //向服务器请求,获得服务器的回应数据流
                 myStream = myRequest.GetResponse().GetResponseStream();
                 //定义一个字节数据
-                byte[] btContent = new byte[512];
+                byte[] btContent = new byte[5120];
                 int intSize = 0;
-                intSize = myStream.Read(btContent, 0, 512);
+                intSize = myStream.Read(btContent, 0, 5120);
                 while (intSize > 0)
                 {
+                    downloadProgress += intSize;
+                    info.DownloadPercent = downloadProgress / (double)serverFileLength;
+                    OnDownloadInfoChange(info);
                     FStream.Write(btContent, 0, intSize);
-                    intSize = myStream.Read(btContent, 0, 512);
+                    intSize = myStream.Read(btContent, 0, 5120);
                 }
                 flag = true;        //返回true下载成功
             }

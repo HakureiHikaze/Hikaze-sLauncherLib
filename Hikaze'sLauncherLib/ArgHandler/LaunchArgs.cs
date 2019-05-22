@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using LauncherLib.Configs;
+using LauncherLib.Utilities;
 using Newtonsoft.Json.Linq;
-namespace LauncherLib
+namespace LauncherLib.ArgHandler
 {
     public static class LaunchArgs
     {

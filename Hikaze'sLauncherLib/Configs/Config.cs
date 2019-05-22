@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Util;
+using LauncherLib.Utilities;
 using Newtonsoft.Json.Linq;
-namespace LauncherLib
+namespace LauncherLib.Configs
 {
     using WindowSize = OrderedPair;
     using Memory = OrderedPair;

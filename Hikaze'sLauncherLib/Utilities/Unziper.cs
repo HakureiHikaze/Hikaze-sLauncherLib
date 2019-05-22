@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using ICSharpCode.SharpZipLib;
 using ICSharpCode.SharpZipLib.Zip;
-namespace LauncherLib
+namespace LauncherLib.Utilities
 {
     public static class Unzipper
     {
