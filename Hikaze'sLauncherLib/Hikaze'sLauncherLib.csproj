@@ -53,7 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config.cs" />
-    <Compile Include="Downloader.cs" />
+    <Compile Include="Download\Downloader.cs" />
+    <Compile Include="Download\MultiDownload000.cs" />
+    <Compile Include="Download\MultiDownloader.cs" />
     <Compile Include="Exception.cs" />
     <Compile Include="JsonHandler.cs" />
     <Compile Include="LaunchArgs.cs" />

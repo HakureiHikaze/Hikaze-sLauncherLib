@@ -11,7 +11,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Security.Cryptography;
 
-namespace LauncherLib
+namespace LauncherLib.Download
 {
     public static class Downloader
     {
@@ -184,27 +184,5 @@ namespace LauncherLib
                 return 0;
             }
         }
-    }
-    public class LibDownloadInfo
-    {
-        public string name;
-        public string path;
-        public string sha1;
-        public int size;
-        public string url;
-        public LibDownloadInfo(JToken jToken, string _name, string GamePath)
-        {
-            name = _name;
-            path = jToken["path"] != null ? GamePath + @"\libraries\" + jToken["path"].ToString() : name != null ? GamePath + @"\libraries\" + LaunchArgs.ConvertPackageToPath(name, null) : "";
-            sha1 = jToken["sha1"] != null ? jToken["sha1"].ToString() : "";
-            size = jToken["size"] != null ? Convert.ToInt32(jToken["size"].ToString()) : 0;
-            url = jToken["url"] != null ? jToken["url"].ToString() : "";
-        }
-        public LibDownloadInfo(string _name, string GamePath, string _sha1, string url)
-        {
-            name = _name;
-
-        }
-        
     }
 }
