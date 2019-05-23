@@ -10,9 +10,16 @@ namespace LauncherLib.Configs
 {
     public static class JsonHandler
     {
-        public static JObject ReadJson(string GamePath,string GameVersion)
+        public static JObject ReadVersionJson(string GamePath,string GameVersion)
         {
             System.IO.StreamReader JsonFile = System.IO.File.OpenText(GamePath + @"\versions\" + GameVersion + @"\" + GameVersion + ".json");
+            JsonTextReader reader = new JsonTextReader(JsonFile);
+            JObject JReading = (JObject)JToken.ReadFrom(reader);
+            return JReading;
+        }
+        public static JObject ReadAnyJson(string path)
+        {
+            System.IO.StreamReader JsonFile = System.IO.File.OpenText(path);
             JsonTextReader reader = new JsonTextReader(JsonFile);
             JObject JReading = (JObject)JToken.ReadFrom(reader);
             return JReading;

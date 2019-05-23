@@ -10,7 +10,7 @@ using System.IO;
 using System.Diagnostics;
 using LauncherLib.ArgHandler;
 
-namespace LauncherLib.Configs
+namespace LauncherLib.Assets
 {
     /// <summary>
     /// 对libraries类的操作
@@ -25,6 +25,9 @@ namespace LauncherLib.Configs
         public static string URL = "url"; public static string WINDOWS = "windows";
         public static string NAME = "name"; public static string OSX = "osx";
         public static string CLASSIFIERS = "classifiers"; public static string CLIENTREQ = "clientreq";
+        public static string TOTALSIZE = "totalSize"; public static string SERVER = "server";
+        public static string CLIENT = "client"; public static string ASSETINDEX = "assetIndex";
+        public static string ID = "id";
         /// <summary>
         /// 获取libraries元素的种类,类别如下：
         /// <para>0:   downloads(artifact(path,sha1,size,url)),name</para>
@@ -56,7 +59,7 @@ namespace LauncherLib.Configs
                         if (lib.sha1 != null)
                         {
                             Debug.WriteLine("Lib sha1 isn't null, verifying. " + lib.sha1);
-                            while (!Downloader.GetSHA1(librariesPath + lib.path, lib.sha1))
+                            while (!Downloader.CheckSHA1(librariesPath + lib.path, lib.sha1))
                             {
                                 Debug.WriteLine("Failed to verify, delete and redownload. " + lib.sha1);
                                 File.Delete(librariesPath + lib.path);
@@ -71,7 +74,7 @@ namespace LauncherLib.Configs
                     Downloader.DownloadFile(lib.url, librariesPath + lib.path);
                     if (lib.sha1 != null)
                     {
-                        while (!Downloader.GetSHA1(librariesPath + lib.path, lib.sha1))
+                        while (!Downloader.CheckSHA1(librariesPath + lib.path, lib.sha1))
                         {
                             Debug.WriteLine("Failed to verify, delete and redownload. (1) " + lib.sha1);
                             File.Delete(librariesPath + lib.path);
@@ -88,67 +91,69 @@ namespace LauncherLib.Configs
     /// </summary>
     public class Libraries
     {
+        #region Class Variable Declarations
         /// <summary>
         /// lib种类
         /// </summary>
-        public readonly int type;
+        public int type { get; }
         /// <summary>
         /// downloads子标签类
         /// </summary>
-        public readonly Downloads downloads = null;
+        public Downloads downloads { get; } = null;
         /// <summary>
         /// 包名
         /// </summary>
-        public readonly string name = null;
+        public string name { get; } = null;
         /// <summary>
         /// forge的不完整域名
         /// </summary>
-        public readonly string url_half = null;
+        public string url_half { get; } = null;
         /// <summary>
         /// 完整的包下载域名
         /// </summary>
-        public readonly string url = null;
+        public string url { get; } = null;
         /// <summary>
         /// 客户端是否需求
         /// </summary>
-        public readonly bool clintReq = true;
+        public bool clintReq { get; } = true;
         /// <summary>
         /// 顾名思义
         /// </summary>
-        public readonly string sha1 = null;
+        public string sha1 { get; } = null;
         /// <summary>
         /// 包的相对libraries文件夹的路径
         /// </summary>
-        public readonly string path = null;
+        public string path { get; } = null;
         /// <summary>
         /// 包的完整路径
         /// </summary>
-        public readonly string fullPath = null;
+        public string fullPath { get; } = null;
         /// <summary>
         /// natives子标签类
         /// </summary>
-        public readonly Natives natives = null;
+        public Natives natives { get; } = null;
         /// <summary>
         /// 是否为要解压的natives
         /// </summary>
-        public readonly bool isNatives = false;
+        public bool isNatives { get; } = false;
         /// <summary>
         /// 是否为客户端需要的lib
         /// </summary>
-        public readonly bool isUseful = true;
+        public bool isUseful { get; } = true;
+        #endregion
         /// <summary>
         /// lib类的构造函数
         /// </summary>
-        /// <param name="_type">lib种类，可以用GetLibType判断</param>
         /// <param name="jToken">传入的json标签</param>
         /// <param name="GamePath">游戏路径</param>
-        public Libraries(int _type, JToken jToken, string GamePath)
+        
+        public Libraries(JToken jToken, string GamePath)
         {
-            type = _type;
+            type = LibOperation.GetLibType(jToken);
             switch (type)
             {
                 case 0:
-                    downloads = new Downloads(jToken, _type);
+                    downloads = new Downloads(jToken, type);
                     name = jToken[LibOperation.NAME].ToString();
                     path = downloads.artifact.path;
                     path = path.Replace("/", @"\");
@@ -156,7 +161,7 @@ namespace LauncherLib.Configs
                     url = downloads.artifact.url != null ? downloads.artifact.url : null;
                     break;
                 case 1:
-                    downloads = new Downloads(jToken, _type);
+                    downloads = new Downloads(jToken, type);
                     name = jToken[LibOperation.NAME].ToString();
                     if (downloads.classifiers.natives_windows == null)
                     {
@@ -205,10 +210,30 @@ namespace LauncherLib.Configs
             }
         }
     }
+    public class assetIndex
+    {
+        public string id { get; } = null;
+        public string sha1 { get; } = null;
+        public int size { get; } = 0;
+        public int totalSize { get; } = 0;
+        public string url { get; } = null;
+        public assetIndex(JToken jToken)
+        {
+            id = jToken[LibOperation.ASSETINDEX][LibOperation.ID] != null ? jToken[LibOperation.ASSETINDEX][LibOperation.ID].ToString() :null ;
+            sha1 = jToken[LibOperation.ASSETINDEX][LibOperation.SHA1] != null ? jToken[LibOperation.ASSETINDEX][LibOperation.SHA1].ToString() : null;
+            size = jToken[LibOperation.ASSETINDEX][LibOperation.SIZE] != null ? Convert.ToInt32(jToken[LibOperation.ASSETINDEX][LibOperation.SIZE].ToString()) : 0;
+            size = jToken[LibOperation.ASSETINDEX][LibOperation.TOTALSIZE] != null ? Convert.ToInt32(jToken[LibOperation.ASSETINDEX][LibOperation.TOTALSIZE].ToString()) : 0;
+            url = jToken[LibOperation.ASSETINDEX][LibOperation.URL] != null ? jToken[LibOperation.ASSETINDEX][LibOperation.URL].ToString() : null;
+        }
+    }
+    public class assets
+    {
+
+    }
     public class Downloads
     {
-        public readonly Artifact artifact = null;
-        public readonly Classifiers classifiers = null;
+        public Artifact artifact { get; } = null;
+        public Classifiers classifiers { get; } = null;
         public Downloads(JToken jToken, int _type)
         {
             switch (_type)
@@ -227,10 +252,10 @@ namespace LauncherLib.Configs
     }
     public class Artifact
     {
-        public readonly string path = null;
-        public readonly string sha1 = null;
-        public readonly int size = 0;
-        public readonly string url = null;
+        public string path { get; } = null;
+        public string sha1 { get; } = null;
+        public int size { get; } = 0;
+        public string url { get; } = null;
         public Artifact(JToken jToken)
         {
             path = jToken[LibOperation.DOWNLOADS][LibOperation.ARTIFACT][LibOperation.PATH].ToString();
@@ -241,9 +266,9 @@ namespace LauncherLib.Configs
     }
     public class Classifiers
     {
-        public readonly Natives_os natives_linux = null;
-        public readonly Natives_os natives_windows = null;
-        public readonly Natives_os natives_osx = null;
+        public Natives_os natives_linux { get; } = null;
+        public Natives_os natives_windows { get; } = null;
+        public Natives_os natives_osx { get; } = null;
         public Classifiers(JToken jToken)
         {
             natives_linux = jToken[LibOperation.DOWNLOADS][LibOperation.CLASSIFIERS][LibOperation.NATIVES_LINUX] != null ? new Natives_os(jToken, "linux") : null;
@@ -253,10 +278,10 @@ namespace LauncherLib.Configs
     }
     public class Natives_os
     {
-        public readonly string path = null;
-        public readonly string sha1 = null;
-        public readonly int size = 0;
-        public readonly string url = null;
+        public string path { get; } = null;
+        public string sha1 { get; } = null;
+        public int size { get; } = 0;
+        public string url { get; } = null;
         public Natives_os(JToken jToken, string os)
         {
             path = jToken[LibOperation.DOWNLOADS][LibOperation.CLASSIFIERS][LibOperation.NATIVES + "-" + os][LibOperation.PATH].ToString();
@@ -267,9 +292,9 @@ namespace LauncherLib.Configs
     }
     public class Natives
     {
-        public readonly string linux = null;
-        public readonly string osx = null;
-        public readonly string windows = null;
+        public string linux { get; } = null;
+        public string osx { get; } = null;
+        public string windows { get; } = null;
         public Natives(JToken jToken)
         {
             linux = jToken[LibOperation.NATIVES][LibOperation.LINUX] != null ? jToken[LibOperation.NATIVES][LibOperation.LINUX].ToString() : null;

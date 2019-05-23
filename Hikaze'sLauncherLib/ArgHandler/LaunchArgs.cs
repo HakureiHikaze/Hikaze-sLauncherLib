@@ -26,7 +26,7 @@ namespace LauncherLib.ArgHandler
         public static ArrayList GetListFormJObject(string GamePath, string GameVersion, string OldGameVersion = null)
         {
             ArrayList LibList = new ArrayList();
-            JObject ReadingJson = JsonHandler.ReadJson(GamePath, GameVersion);
+            JObject ReadingJson = JsonHandler.ReadVersionJson(GamePath, GameVersion);
             if (ReadingJson["inheritsFrom"] != null)
             {
                 LibList.AddRange(GetListFormJObject(GamePath, ReadingJson["inheritsFrom"].ToString(), GameVersion));

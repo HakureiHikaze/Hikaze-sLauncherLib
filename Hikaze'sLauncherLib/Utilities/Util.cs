@@ -7,6 +7,20 @@ using Microsoft.Win32;
 
 namespace LauncherLib.Utilities
 {
+    public static class Utils
+    {
+        public static int getPairedSign(string input, int j)
+        {
+            for (int i =j+1; i<input.Length; i++)
+            {
+                if (input[i] == '\"')
+                {
+                    return i;
+                }
+            }
+            return j;
+        }
+    }
     public static class PathTools
     {
         public static string GetJavaPath()

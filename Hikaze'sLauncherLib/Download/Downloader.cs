@@ -17,7 +17,7 @@ namespace LauncherLib.Download
     public static class Downloader
     {
         public delegate void DownloadInfoHandler(DownloadInfo info);
-        public static  DownloadInfoHandler OnDownloadInfoChange;
+        //public static DownloadInfoHandler OnDownloadInfoChange;
         public static void SimpleDownload(string URL, string LocalPath)
         {
             WebClient DownloadClient = new WebClient();
@@ -58,7 +58,7 @@ namespace LauncherLib.Download
                 return -1;
             }
         }
-        public static bool GetSHA1(string path,string SourceSHA1)
+        public static bool CheckSHA1(string path,string SourceSHA1)
         {
             try
             {
@@ -87,6 +87,28 @@ namespace LauncherLib.Download
                 return false;
             }
         }
+        public static string GetSHA1(string path)
+        {
+            //try
+            //{
+                FileStream file = new FileStream(path, FileMode.Open);
+                SHA1 sha1 = new SHA1CryptoServiceProvider();
+                byte[] retval = sha1.ComputeHash(file);
+                file.Close();
+                StringBuilder sc = new StringBuilder();
+                for (int i = 0; i < retval.Length; i++)
+                {
+                    sc.Append(retval[i].ToString("x2"));
+                }
+                Debug.WriteLine(sc.ToString());
+                return sc.ToString();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex.Message);
+            //    return null;
+            //}
+        }
         /// 下载文件方法
         /// 文件保存路径和文件名
         /// 返回服务器文件名
@@ -110,8 +132,8 @@ namespace LauncherLib.Download
             {
                 //desFile = desFile + "\\" + fileName;
             }
-            try
-            {
+            //try
+            //{
                 long downloadProgress =0;
                 long serverFileLength = GetHttpLength(sourceFile);
                 //判断要下载的文件夹是否存在
@@ -126,7 +148,7 @@ namespace LauncherLib.Download
                     if (SPosition == serverFileLength)
                     {//文件是完整的，直接结束下载任务
                         
-                        OnDownloadInfoChange(info);
+                        //OnDownloadInfoChange(info);
                         return true;
                     }
                     FStream.Seek(SPosition, SeekOrigin.Current);
@@ -137,7 +159,7 @@ namespace LauncherLib.Download
                     FStream = new FileStream(desFile, FileMode.Create);
                     SPosition = 0;
                     info = new DownloadInfo(sourceFile, desFile, 0d);
-                    OnDownloadInfoChange(info);
+                    //OnDownloadInfoChange(info);
                 }
                 //打开网络连接
                 HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(sourceFile);
@@ -155,18 +177,18 @@ namespace LauncherLib.Download
                 {
                     downloadProgress += intSize;
                     info.DownloadPercent = downloadProgress / (double)serverFileLength;
-                    OnDownloadInfoChange(info);
+                    //OnDownloadInfoChange(info);
                     FStream.Write(btContent, 0, intSize);
                     intSize = myStream.Read(btContent, 0, 5120);
                 }
                 flag = true;        //返回true下载成功
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("下载文件时异常：" + ex.Message);
-            }
-            finally
-            {
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine("下载文件时异常：" + ex.Message);
+            //}
+            //finally
+            //{
                 //关闭流
                 if (myStream != null)
                 {
@@ -178,7 +200,7 @@ namespace LauncherLib.Download
                     FStream.Close();
                     FStream.Dispose();
                 }
-            }
+            //}
             return flag;
         }
         public static long GetHttpLength(string url)
