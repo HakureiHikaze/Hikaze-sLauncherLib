@@ -27,7 +27,7 @@ namespace Test
             //}
             foreach(SingleObject element in newIndet.ObjList)
             {
-                tasks.Enqueue(new DownloadTask(element.url, @".\testAssets\" + element.path, element.sha1));
+                tasks.Enqueue(new DownloadTask(element.url, @".\testAssets\" + element.path, element.sha1,element.size));
                 //Debug.WriteLine(element.sha1);
             }
             MultiDownloader download1 = new MultiDownloader(tasks, 100,false);

@@ -14,11 +14,14 @@ namespace LauncherLib.Download
         public readonly string url;
         public readonly string localPath;
         public readonly string sha1;
-        public DownloadTask(string _url, string _localPath, string _sha1)
+        public int size { get; }
+        public bool isDownloading { get; set; } = false;
+        public DownloadTask(string _url, string _localPath, string _sha1, int _size)
         {
             url = _url;
             localPath = _localPath;
             sha1 = _sha1;
+            size = _size;
             Downloader.CreateDir(_localPath);
         }
         public void SingleDownloadUncheck()
@@ -45,33 +48,80 @@ namespace LauncherLib.Download
         }
         public void SingleDownload()
         {
-            Console.WriteLine("Thread "+Thread.CurrentThread.ManagedThreadId.ToString()+": Starting download " + this.url + " . [SingleDownload()][0]");
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Starting download " + this.url + " . [SingleDownload()][0]");
+            Console.ForegroundColor = ConsoleColor.White;
             if (this.localPath != null && this.url != null)
             {
+                Console.ForegroundColor = ConsoleColor.Blue;
                 Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Avaliable task " + " . [SingleDownload()][0]");
+                Console.ForegroundColor = ConsoleColor.White;
                 if (!File.Exists(this.localPath))
                 {
-                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": "+this.localPath+" doesn't exists, check and create dir" + " . [SingleDownload()][0]");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " doesn't exists, check and create dir" + " . [SingleDownload()][0]");
+                    Console.ForegroundColor = ConsoleColor.White;
                     Downloader.CreateDir(this.localPath);
-                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Start download "+this.localPath + " . [SingleDownload()][0]");
-                    Downloader.DownloadFile(this.url, this.localPath);
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Start download " + this.localPath + " . [SingleDownload()][0]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    if (!Downloader.DownloadFile(this.url, this.localPath))
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Problem occured. Redownload " + " . [SingleDownload()][0]");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        SingleDownload();
+                    }
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Downloaded " + this.localPath + " . [SingleDownload()][0]");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " already exists, check downloads" + " . [SingleDownload()][0]");
-                    Downloader.DownloadFile(this.url, this.localPath);
-                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Downloaded " + this.localPath + " . [SingleDownload()][1]");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    FileInfo info0 = new FileInfo(this.localPath);
+
+                    if (info0.Length != this.size)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " size mismatch, continue downloading" + " . [SingleDownload()][0]");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        if (!Downloader.DownloadFile(this.url, this.localPath))
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Problem occured. Redownload " + " . [SingleDownload()][0]");
+                            Console.ForegroundColor = ConsoleColor.White;
+                            SingleDownload();
+                        }
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Downloaded " + this.localPath + " . [SingleDownload()][1]");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
                 }
                 if (this.sha1 != null)
                 {
-                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Avaliable sha1, check sha1 " +" \""+this.sha1+"\" " + " . [SingleDownload()][0]");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Avaliable sha1, check sha1 " + " \"" + this.sha1 + "\" " + " . [SingleDownload()][0]");
+                    Console.ForegroundColor = ConsoleColor.White;
                     while (!Downloader.CheckSHA1(this.localPath, this.sha1))
                     {
-                        Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": SHA1 check failed " + " \"" + this.sha1 + "\" "+" with \""+Downloader.GetSHA1(this.localPath)+"\"" + " . [SingleDownload()][0]");
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": SHA1 check failed " + " \"" + this.sha1 + "\" " + " with \"" + Downloader.GetSHA1(this.localPath) + "\"" + " . [SingleDownload()][0]");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        File.Delete(this.localPath);
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Redownloading " + this.localPath + " . [SingleDownload()][0]");
+                        Console.ForegroundColor = ConsoleColor.White;
                         Downloader.DownloadFile(this.url, this.localPath);
+                        Console.ForegroundColor = ConsoleColor.Blue;
                         Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Downloaded " + this.localPath + " . [SingleDownload()][2]");
+                        Console.ForegroundColor = ConsoleColor.White;
                     }
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Successfully downloaded " + this.localPath + " . [SingleDownload()][2]");
+                    Console.ForegroundColor = ConsoleColor.White;
                 }
             }
         }
@@ -83,7 +133,7 @@ namespace LauncherLib.Download
         bool uncheck = false;
         Queue<DownloadTask> DownloadList { get; set; }
         int DownloadThreads { get; set; }
-        public MultiDownloader(Queue<DownloadTask> inDownloadList, int inDownloadThreads,bool _uncheck)
+        public MultiDownloader(Queue<DownloadTask> inDownloadList, int inDownloadThreads, bool _uncheck)
         {
             DownloadList = inDownloadList;
             DownloadThreads = inDownloadThreads;
@@ -96,15 +146,35 @@ namespace LauncherLib.Download
             {
                 if (DownloadList.Count != 0)
                 {
+
                     if (!uncheck)
                     {
-                        threads[i] = new Thread(new ThreadStart(DownloadList.Dequeue().SingleDownload));
+                        DownloadTask thisTask = DownloadList.Dequeue();
+                        if (!thisTask.isDownloading)
+                        {
+                            thisTask.isDownloading = true;
+                            threads[i] = new Thread(new ThreadStart(thisTask.SingleDownload));
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
+
                     else
                     {
-                        threads[i] = new Thread(new ThreadStart(DownloadList.Dequeue().SingleDownloadUncheck));
+                        DownloadTask thisTask = DownloadList.Dequeue();
+                        if (!thisTask.isDownloading)
+                        {
+                            thisTask.isDownloading = true;
+                            threads[i] = new Thread(new ThreadStart(thisTask.SingleDownloadUncheck));
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
-                } 
+                }
                 else
                 {
                     break;
@@ -121,11 +191,30 @@ namespace LauncherLib.Download
                     {
                         if (!uncheck)
                         {
-                            threads[i] = new Thread(new ThreadStart(DownloadList.Dequeue().SingleDownload));
+                            DownloadTask thisTask = DownloadList.Dequeue();
+                            if (!thisTask.isDownloading)
+                            {
+                                thisTask.isDownloading = true;
+                                threads[i] = new Thread(new ThreadStart(thisTask.SingleDownload));
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
+
                         else
                         {
-                            threads[i] = new Thread(new ThreadStart(DownloadList.Dequeue().SingleDownloadUncheck));
+                            DownloadTask thisTask = DownloadList.Dequeue();
+                            if (!thisTask.isDownloading)
+                            {
+                                thisTask.isDownloading = true;
+                                threads[i] = new Thread(new ThreadStart(thisTask.SingleDownloadUncheck));
+                            }
+                            else
+                            {
+                                continue;
+                            }
                         }
                         threads[i].Start();
                     }

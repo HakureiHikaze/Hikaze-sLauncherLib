@@ -132,8 +132,8 @@ namespace LauncherLib.Download
             {
                 //desFile = desFile + "\\" + fileName;
             }
-            //try
-            //{
+            try
+            {
                 long downloadProgress =0;
                 long serverFileLength = GetHttpLength(sourceFile);
                 //判断要下载的文件夹是否存在
@@ -170,25 +170,26 @@ namespace LauncherLib.Download
                 //向服务器请求,获得服务器的回应数据流
                 myStream = myRequest.GetResponse().GetResponseStream();
                 //定义一个字节数据
-                byte[] btContent = new byte[5120];
+                byte[] btContent = new byte[512];
                 int intSize = 0;
-                intSize = myStream.Read(btContent, 0, 5120);
+                intSize = myStream.Read(btContent, 0, 512);
                 while (intSize > 0)
                 {
                     downloadProgress += intSize;
                     info.DownloadPercent = downloadProgress / (double)serverFileLength;
                     //OnDownloadInfoChange(info);
                     FStream.Write(btContent, 0, intSize);
-                    intSize = myStream.Read(btContent, 0, 5120);
+                    intSize = myStream.Read(btContent, 0, 512);
                 }
                 flag = true;        //返回true下载成功
-            //}
-            //catch (Exception ex)
-            //{
-            //    Debug.WriteLine("下载文件时异常：" + ex.Message);
-            //}
-            //finally
-            //{
+            }
+            catch (Exception ex)
+            {
+              Debug.WriteLine("下载文件时异常：" + ex.Message);
+                flag = false;
+            }
+            finally
+            {
                 //关闭流
                 if (myStream != null)
                 {
@@ -200,7 +201,7 @@ namespace LauncherLib.Download
                     FStream.Close();
                     FStream.Dispose();
                 }
-            //}
+            }
             return flag;
         }
         public static long GetHttpLength(string url)
