@@ -8,9 +8,20 @@ namespace LauncherLib.Upgrader
 {
     public static class PackageMaker
     {
-    }
-    class Package
-    {
+        public static Package MakePackage(string GamePath)
+        {
 
+        }
+    }
+    public class Package
+    {
+        public static readonly string HikazeResources = "https://resources.eod.moe";
+        public string Name { get; }
+        public string sha1 { get; }
+        public int size { get; }
+        public string mainVersion { get; }
+        public int subVersion { get; }
+        public string localPath { get; }
+        public string Url { get; }
     }
 }
