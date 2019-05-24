@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using LauncherLib.Utilities;
@@ -8,7 +9,7 @@ namespace LauncherLib.Configs
 {
     using WindowSize = OrderedPair;
     using Memory = OrderedPair;
-    public class Config
+    public class Config:IJsonConfig
     {
         const string DefaultJVMArgs = 
             "-XX:+UseG1GC "+
@@ -40,8 +41,10 @@ namespace LauncherLib.Configs
         public string MCArguments;
         public string Server;
         public bool EnterServer;
-        public Config(JObject ConfigJson)
+        JObject ConfigJson;
+        public Config(string path)
         {
+            ConfigJson = JsonHandler.ReadAnyJson(path);
             memory.x        = ConfigJson != null ? ConfigJson["MinMem"]         != null ? Convert.ToInt32(ConfigJson["MinMem"].ToString())          : DefaultMinMem             : DefaultMinMem;
             memory.y        = ConfigJson != null ? ConfigJson["MaxMem"]         != null ? Convert.ToInt32(ConfigJson["MaxMem"].ToString())          : DefaultMaxMem             : DefaultMaxMem;
             JavaPath        = ConfigJson != null ? ConfigJson["JavaPath"]       != null ? ConfigJson["JavaPath"].ToString()                         : PathTools.GetJavaPath()   : PathTools.GetJavaPath();
@@ -60,6 +63,16 @@ namespace LauncherLib.Configs
                         new PlayerInfo("SetName") :
                     new PlayerInfo("SetName") :
                 new PlayerInfo("SetName");
+        }
+
+        public JObject UpdateJsonObj()
+        {
+            return ConfigJson;
+        }
+
+        public bool WriteJsonObj()
+        {
+            throw new NotImplementedException();
         }
     }
 }

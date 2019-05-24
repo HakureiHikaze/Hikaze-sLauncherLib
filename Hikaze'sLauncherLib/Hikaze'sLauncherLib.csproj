@@ -59,8 +59,8 @@
     <Compile Include="Assets\IAssetsDownload.cs" />
     <Compile Include="Assets\IndexObjects.cs" />
     <Compile Include="Configs\Config.cs" />
+    <Compile Include="Configs\IJsonConfig.cs" />
     <Compile Include="Download\Downloader.cs" />
-    <Compile Include="Download\MultiDownload000.cs" />
     <Compile Include="Download\MultiDownloader.cs" />
     <Compile Include="Lang\Event\EventListener.cs" />
     <Compile Include="Lang\Exception.cs" />

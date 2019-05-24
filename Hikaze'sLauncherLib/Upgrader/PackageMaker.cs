@@ -10,8 +10,11 @@ namespace LauncherLib.Upgrader
     {
         public static Package MakePackage(string GamePath)
         {
-
+            //TODO
+            return null;
         }
+        //public static Package GenerateInfoFromZIP(string )
+        //TODO
     }
     public class Package
     {

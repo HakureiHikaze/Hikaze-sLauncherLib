@@ -19,6 +19,10 @@ namespace LauncherLib.Configs
         }
         public static JObject ReadAnyJson(string path)
         {
+            if (path == null)
+            {
+                return null;
+            }
             System.IO.StreamReader JsonFile = System.IO.File.OpenText(path);
             JsonTextReader reader = new JsonTextReader(JsonFile);
             JObject JReading = (JObject)JToken.ReadFrom(reader);
