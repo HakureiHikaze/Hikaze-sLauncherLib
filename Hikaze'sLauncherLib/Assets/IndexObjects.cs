@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using LauncherLib.Configs;
 using System.Diagnostics;
 using System.Collections;
+using LauncherLib.Download;
+using System.IO;
 
 namespace LauncherLib.Assets
 {
@@ -70,7 +72,7 @@ namespace LauncherLib.Assets
             }
         }
     }
-    public class SingleObject
+    public class SingleObject:IAssetDownload
     {
         public string name { get; }
         public string sha1 { get; }
@@ -88,6 +90,27 @@ namespace LauncherLib.Assets
             path = sha1 != null ? init + @"\" + sha1:null;
             halfUrl = path != null ? path.Replace(@"\", "/"):null;
             url = initUrl + "/" + halfUrl;
+        }
+
+        public DownloadTask GenDownTasks(string GamePath)
+        {
+            return new DownloadTask(this.url, GamePath + @"\assets\objects\" + this.path, this.sha1, this.size);
+        }
+
+        public bool CheckExistence(string GamePath)
+        {
+            return File.Exists(GamePath + @"\assets\objects\" + this.path);
+        }
+
+        public bool CheckSize(string GamePath)
+        {
+            FileInfo fileInfo = new FileInfo(GamePath + @"\assets\objects\" + this.path);
+            return fileInfo.Length == this.size;
+        }
+
+        public bool CheckSHA1(string GamePath)
+        {
+            return Downloader.CheckSHA1(GamePath + @"\assets\objects\" + this.path, this.sha1);
         }
     }
 }

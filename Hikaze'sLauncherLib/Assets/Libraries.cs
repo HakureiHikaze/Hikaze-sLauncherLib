@@ -41,55 +41,55 @@ namespace LauncherLib.Assets
         {
             return jToken["downloads"] != null ? jToken["downloads"]["classifiers"] != null ? 1 : 0 : jToken["url"] != null ? 2 : 3;
         }
-        public static void LibDownload(Libraries lib, string librariesPath)
-        {
-            if (lib.path != null)
-            {
-                Debug.WriteLine("Lib path isn't null. " + lib.path);
-                if (!File.Exists(librariesPath + lib.path))
-                {
-                    Debug.WriteLine("File doesn't exists, creating. " + lib.path);
-                    Downloader.CreateDir(librariesPath + lib.path);
-                    Debug.WriteLine("Created File Directory. " + lib.path);
-                    if (lib.url != null)
-                    {
-                        Debug.WriteLine("Lib url isn't null, downloading. " + lib.url);
-                        Downloader.DownloadFile(lib.url, librariesPath + lib.path);
-                        Debug.WriteLine("Downloaded " + lib.path);
-                        if (lib.sha1 != null)
-                        {
-                            Debug.WriteLine("Lib sha1 isn't null, verifying. " + lib.sha1);
-                            while (!Downloader.CheckSHA1(librariesPath + lib.path, lib.sha1))
-                            {
-                                Debug.WriteLine("Failed to verify, delete and redownload. " + lib.sha1);
-                                File.Delete(librariesPath + lib.path);
-                                Downloader.DownloadFile(lib.url, librariesPath + lib.path);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    Debug.WriteLine("File exists, is correct file? " + lib.path);
-                    Downloader.DownloadFile(lib.url, librariesPath + lib.path);
-                    if (lib.sha1 != null)
-                    {
-                        while (!Downloader.CheckSHA1(librariesPath + lib.path, lib.sha1))
-                        {
-                            Debug.WriteLine("Failed to verify, delete and redownload. (1) " + lib.sha1);
-                            File.Delete(librariesPath + lib.path);
-                            Downloader.DownloadFile(lib.url, librariesPath + lib.path);
-                        }
-                    }
+        //public static void LibDownload(Libraries lib, string librariesPath)
+        //{
+        //    if (lib.path != null)
+        //    {
+        //        Debug.WriteLine("Lib path isn't null. " + lib.path);
+        //        if (!File.Exists(librariesPath + lib.path))
+        //        {
+        //            Debug.WriteLine("File doesn't exists, creating. " + lib.path);
+        //            Downloader.CreateDir(librariesPath + lib.path);
+        //            Debug.WriteLine("Created File Directory. " + lib.path);
+        //            if (lib.url != null)
+        //            {
+        //                Debug.WriteLine("Lib url isn't null, downloading. " + lib.url);
+        //                Downloader.DownloadFile(lib.url, librariesPath + lib.path);
+        //                Debug.WriteLine("Downloaded " + lib.path);
+        //                if (lib.sha1 != null)
+        //                {
+        //                    Debug.WriteLine("Lib sha1 isn't null, verifying. " + lib.sha1);
+        //                    while (!Downloader.CheckSHA1(librariesPath + lib.path, lib.sha1))
+        //                    {
+        //                        Debug.WriteLine("Failed to verify, delete and redownload. " + lib.sha1);
+        //                        File.Delete(librariesPath + lib.path);
+        //                        Downloader.DownloadFile(lib.url, librariesPath + lib.path);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            Debug.WriteLine("File exists, is correct file? " + lib.path);
+        //            Downloader.DownloadFile(lib.url, librariesPath + lib.path);
+        //            if (lib.sha1 != null)
+        //            {
+        //                while (!Downloader.CheckSHA1(librariesPath + lib.path, lib.sha1))
+        //                {
+        //                    Debug.WriteLine("Failed to verify, delete and redownload. (1) " + lib.sha1);
+        //                    File.Delete(librariesPath + lib.path);
+        //                    Downloader.DownloadFile(lib.url, librariesPath + lib.path);
+        //                }
+        //            }
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
     }
     /// <summary>
     /// lib类
     /// </summary>
-    public class Libraries
+    public class Libraries : IAssetDownload
     {
         #region Class Variable Declarations
         /// <summary>
@@ -146,7 +146,7 @@ namespace LauncherLib.Assets
         /// </summary>
         /// <param name="jToken">传入的json标签</param>
         /// <param name="GamePath">游戏路径</param>
-        
+
         public Libraries(JToken jToken, string GamePath)
         {
             type = LibOperation.GetLibType(jToken);
@@ -209,6 +209,33 @@ namespace LauncherLib.Assets
                 isUseful = false;
             }
         }
+
+        public DownloadTask GenDownTasks(string GamePath)
+        {
+            return new DownloadTask(this.url, this.fullPath, this.sha1, 0);
+        }
+
+        public bool CheckExistence(string GamePath)
+        {
+            return File.Exists(this.fullPath);
+        }
+
+        public bool CheckSize(string GamePath)
+        {
+            return true;
+        }
+
+        public bool CheckSHA1(string GamePath)
+        {
+            if (this.sha1 != null)
+            {
+                return Downloader.CheckSHA1(this.fullPath, this.sha1);
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
     public class assetIndex
     {
@@ -219,7 +246,7 @@ namespace LauncherLib.Assets
         public string url { get; } = null;
         public assetIndex(JToken jToken)
         {
-            id = jToken[LibOperation.ASSETINDEX][LibOperation.ID] != null ? jToken[LibOperation.ASSETINDEX][LibOperation.ID].ToString() :null ;
+            id = jToken[LibOperation.ASSETINDEX][LibOperation.ID] != null ? jToken[LibOperation.ASSETINDEX][LibOperation.ID].ToString() : null;
             sha1 = jToken[LibOperation.ASSETINDEX][LibOperation.SHA1] != null ? jToken[LibOperation.ASSETINDEX][LibOperation.SHA1].ToString() : null;
             size = jToken[LibOperation.ASSETINDEX][LibOperation.SIZE] != null ? Convert.ToInt32(jToken[LibOperation.ASSETINDEX][LibOperation.SIZE].ToString()) : 0;
             size = jToken[LibOperation.ASSETINDEX][LibOperation.TOTALSIZE] != null ? Convert.ToInt32(jToken[LibOperation.ASSETINDEX][LibOperation.TOTALSIZE].ToString()) : 0;

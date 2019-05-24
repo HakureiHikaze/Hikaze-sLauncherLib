@@ -24,6 +24,16 @@ namespace LauncherLib.Download
             size = _size;
             Downloader.CreateDir(_localPath);
         }
+        void ConsoleWriteLineColored(ConsoleColor color,string message)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+        string ThreadInfoWithMsg(string msg)
+        {
+            return "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + msg;
+        }
         public void SingleDownloadUncheck()
         {
             Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Starting download " + this.url + " . [SingleDownload()][0]");
@@ -48,19 +58,13 @@ namespace LauncherLib.Download
         }
         public void SingleDownload()
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Starting download " + this.url + " . [SingleDownload()][0]");
-            Console.ForegroundColor = ConsoleColor.White;
+            ConsoleWriteLineColored(ConsoleColor.Blue, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Starting download " + this.url + " . [SingleDownload()][0]");
             if (this.localPath != null && this.url != null)
             {
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Avaliable task " + " . [SingleDownload()][0]");
-                Console.ForegroundColor = ConsoleColor.White;
+                ConsoleWriteLineColored(ConsoleColor.Blue, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Avaliable task " + " . [SingleDownload()][0]");
                 if (!File.Exists(this.localPath))
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " doesn't exists, check and create dir" + " . [SingleDownload()][0]");
-                    Console.ForegroundColor = ConsoleColor.White;
+                    ConsoleWriteLineColored(ConsoleColor.Yellow, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " doesn't exists, check and create dir" + " . [SingleDownload()][0]");
                     Downloader.CreateDir(this.localPath);
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Start download " + this.localPath + " . [SingleDownload()][0]");
@@ -82,22 +86,28 @@ namespace LauncherLib.Download
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " already exists, check downloads" + " . [SingleDownload()][0]");
                     Console.ForegroundColor = ConsoleColor.White;
                     FileInfo info0 = new FileInfo(this.localPath);
-
-                    if (info0.Length != this.size)
+                    if (this.size != 0)
                     {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " size mismatch, continue downloading" + " . [SingleDownload()][0]");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        if (!Downloader.DownloadFile(this.url, this.localPath))
+                        if (info0.Length != this.size)
                         {
-                            Console.ForegroundColor = ConsoleColor.Red;
-                            Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Problem occured. Redownload " + " . [SingleDownload()][0]");
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " size mismatch, continue downloading" + " . [SingleDownload()][0]");
                             Console.ForegroundColor = ConsoleColor.White;
-                            SingleDownload();
+                            if (!Downloader.DownloadFile(this.url, this.localPath))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Debug.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Problem occured. Redownload " + " . [SingleDownload()][0]");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                SingleDownload();
+                            }
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Downloaded " + this.localPath + " . [SingleDownload()][1]");
+                            Console.ForegroundColor = ConsoleColor.White;
                         }
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Downloaded " + this.localPath + " . [SingleDownload()][1]");
-                        Console.ForegroundColor = ConsoleColor.White;
+                        else
+                        {
+                            ConsoleWriteLineColored(ConsoleColor.Yellow, ThreadInfoWithMsg("Invalid size, skip. [SingleDownload()][0]"));
+                        }
                     }
                 }
                 if (this.sha1 != null)

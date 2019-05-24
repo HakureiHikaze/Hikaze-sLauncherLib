@@ -50,9 +50,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Tamir.SharpSSH, Version=1.1.1.13, Culture=neutral">
+      <HintPath>..\packages\Tamir.SharpSSH.1.1.1.13\lib\Tamir.SharpSSH.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Assets.cs" />
+    <Compile Include="Assets\IAssetsDownload.cs" />
     <Compile Include="Assets\IndexObjects.cs" />
     <Compile Include="Configs\Config.cs" />
     <Compile Include="Download\Downloader.cs" />
@@ -66,8 +70,14 @@
     <Compile Include="Assets\Libraries.cs" />
     <Compile Include="Configs\PlayerInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Upgrader\GameUpgrade.cs" />
+    <Compile Include="Upgrader\LauncherUpgrade.cs" />
+    <Compile Include="Upgrader\PackageMaker.cs" />
+    <Compile Include="Upgrader\Uploader.cs" />
+    <Compile Include="Utilities\SFTPHelper.cs" />
     <Compile Include="Utilities\Unziper.cs" />
     <Compile Include="Utilities\Util.cs" />
+    <Compile Include="Utilities\Zip.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
