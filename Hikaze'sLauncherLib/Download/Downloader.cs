@@ -24,40 +24,7 @@ namespace LauncherLib.Download
             DownloadClient.DownloadFile(URL, LocalPath);
             
         }
-        public static int CreateDir(string FullPath)
-
-        {
-            try
-            {
-                if (File.Exists(FullPath))
-                {
-                    return 0;
-                }
-                else //判断路径中的文件夹是否存在
-                {
-                    string dirpath = FullPath.Substring(0, FullPath.LastIndexOf('\\'));
-                    string[] pathes = dirpath.Split('\\');
-                    if (pathes.Length > 1)
-                    {
-                        string path = pathes[0];
-                        for (int i = 1; i < pathes.Length; i++)
-                        {
-                            path += "\\" + pathes[i];
-                            if (!Directory.Exists(path))
-                            {
-                                Directory.CreateDirectory(path);
-                            }
-                        }
-                    }
-                    return 1;
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine("Problem occurred: " + e.Message);
-                return -1;
-            }
-        }
+        
         public static bool CheckSHA1(string path,string SourceSHA1)
         {
             try
