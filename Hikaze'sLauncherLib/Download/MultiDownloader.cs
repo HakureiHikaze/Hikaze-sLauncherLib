@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LauncherLib.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -22,7 +23,7 @@ namespace LauncherLib.Download
             localPath = _localPath;
             sha1 = _sha1;
             size = _size;
-            Downloader.CreateDir(_localPath);
+            Utils.CreateDir(_localPath);
         }
         void ConsoleWriteLineColored(ConsoleColor color,string message)
         {
@@ -43,7 +44,7 @@ namespace LauncherLib.Download
                 if (!File.Exists(this.localPath))
                 {
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " doesn't exists, check and create dir" + " . [SingleDownload()][0]");
-                    Downloader.CreateDir(this.localPath);
+                    Utils.CreateDir(this.localPath);
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Start download " + this.localPath + " . [SingleDownload()][0]");
                     Downloader.DownloadFile(this.url, this.localPath);
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Downloaded " + this.localPath + " . [SingleDownload()][0]");
@@ -65,7 +66,7 @@ namespace LauncherLib.Download
                 if (!File.Exists(this.localPath))
                 {
                     ConsoleWriteLineColored(ConsoleColor.Yellow, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " doesn't exists, check and create dir" + " . [SingleDownload()][0]");
-                    Downloader.CreateDir(this.localPath);
+                    Utils.CreateDir(this.localPath);
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Start download " + this.localPath + " . [SingleDownload()][0]");
                     Console.ForegroundColor = ConsoleColor.White;

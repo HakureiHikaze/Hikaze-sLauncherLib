@@ -44,7 +44,7 @@ namespace LauncherLib.Utilities
                         FileStream outStream = File.Open(zipFileName, FileMode.Create);
 
                         //参数true表示压缩完成后，inStream和outStream连接都释放  
-                        BZip2.Compress(inStream, outStream, true, 4096);
+                        BZip2.Compress(inStream, outStream, 4096);
 
                         inStream.Close();
                         outStream.Close();
