@@ -7,7 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
 namespace LauncherLib.Download
 {
     public class DownloadTask
@@ -25,12 +24,7 @@ namespace LauncherLib.Download
             size = _size;
             Utils.CreateDir(_localPath);
         }
-        void ConsoleWriteLineColored(ConsoleColor color,string message)
-        {
-            Console.ForegroundColor = color;
-            Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
+
         string ThreadInfoWithMsg(string msg)
         {
             return "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + msg;
@@ -59,13 +53,13 @@ namespace LauncherLib.Download
         }
         public void SingleDownload()
         {
-            ConsoleWriteLineColored(ConsoleColor.Blue, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Starting download " + this.url + " . [SingleDownload()][0]");
+            Utils.ConsoleWriteLineColored(ConsoleColor.Blue, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Starting download " + this.url + " . [SingleDownload()][0]");
             if (this.localPath != null && this.url != null)
             {
-                ConsoleWriteLineColored(ConsoleColor.Blue, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Avaliable task " + " . [SingleDownload()][0]");
+                Utils.ConsoleWriteLineColored(ConsoleColor.Blue, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Avaliable task " + " . [SingleDownload()][0]");
                 if (!File.Exists(this.localPath))
                 {
-                    ConsoleWriteLineColored(ConsoleColor.Yellow, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " doesn't exists, check and create dir" + " . [SingleDownload()][0]");
+                    Utils.ConsoleWriteLineColored(ConsoleColor.Yellow, "Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": " + this.localPath + " doesn't exists, check and create dir" + " . [SingleDownload()][0]");
                     Utils.CreateDir(this.localPath);
                     Console.ForegroundColor = ConsoleColor.Blue;
                     Console.WriteLine("Thread " + Thread.CurrentThread.ManagedThreadId.ToString() + ": Start download " + this.localPath + " . [SingleDownload()][0]");
@@ -107,7 +101,7 @@ namespace LauncherLib.Download
                         }
                         else
                         {
-                            ConsoleWriteLineColored(ConsoleColor.Yellow, ThreadInfoWithMsg("Invalid size, skip. [SingleDownload()][0]"));
+                            Utils.ConsoleWriteLineColored(ConsoleColor.Yellow, ThreadInfoWithMsg("Invalid size, skip. [SingleDownload()][0]"));
                         }
                     }
                 }

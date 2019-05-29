@@ -22,7 +22,6 @@ namespace LauncherLib.Download
         {
             WebClient DownloadClient = new WebClient();
             DownloadClient.DownloadFile(URL, LocalPath);
-            
         }
         
         public static bool CheckSHA1(string path,string SourceSHA1)

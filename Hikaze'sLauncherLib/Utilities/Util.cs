@@ -10,6 +10,12 @@ namespace LauncherLib.Utilities
 {
     public static class Utils
     {
+        public static void ConsoleWriteLineColored(ConsoleColor color, string message)
+        {
+            Console.ForegroundColor = color;
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
         public static int CreateDir(string FullPath)
         {
             try
