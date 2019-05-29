@@ -59,7 +59,9 @@
     <Compile Include="Configs\IJsonConfig.cs" />
     <Compile Include="Download\Downloader.cs" />
     <Compile Include="Download\MultiDownloader.cs" />
-    <Compile Include="Lang\Event\EventListener.cs" />
+    <Compile Include="Download\NewDownloader.cs" />
+    <Compile Include="Lang\Event\DownloadEventArgs.cs" />
+    <Compile Include="Lang\Event\MultiDownloadventArgs.cs" />
     <Compile Include="Lang\Exception.cs" />
     <Compile Include="Configs\JsonHandler.cs" />
     <Compile Include="ArgHandler\LaunchArgs.cs" />

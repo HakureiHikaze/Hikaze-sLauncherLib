@@ -16,7 +16,7 @@ namespace LauncherLib.Download
 {
     public static class Downloader
     {
-        public delegate void DownloadInfoHandler(DownloadInfo info);
+        //public delegate void DownloadInfoHandler(DownloadInfo info);
         //public static DownloadInfoHandler OnDownloadInfoChange;
         public static void SimpleDownload(string URL, string LocalPath)
         {
@@ -85,7 +85,7 @@ namespace LauncherLib.Download
         }
         public static bool DownloadFile(string sourceFile, string desFile)
         {
-            DownloadInfo info;
+            //DownloadInfo info;
             bool flag = false;
             long SPosition = 0;
             FileStream FStream = null;
@@ -111,7 +111,7 @@ namespace LauncherLib.Download
                     //获取已经下载的长度
                     SPosition = FStream.Length;
                     downloadProgress = SPosition;
-                    info = new DownloadInfo(sourceFile, desFile, SPosition / (double)serverFileLength);
+                    //info = new DownloadInfo(sourceFile, desFile, SPosition / (double)serverFileLength);
                     if (SPosition == serverFileLength)
                     {//文件是完整的，直接结束下载任务
                         
@@ -125,7 +125,7 @@ namespace LauncherLib.Download
                     //文件不保存创建一个文件
                     FStream = new FileStream(desFile, FileMode.Create);
                     SPosition = 0;
-                    info = new DownloadInfo(sourceFile, desFile, 0d);
+                    //info = new DownloadInfo(sourceFile, desFile, 0d);
                     //OnDownloadInfoChange(info);
                 }
                 //打开网络连接
@@ -143,7 +143,7 @@ namespace LauncherLib.Download
                 while (intSize > 0)
                 {
                     downloadProgress += intSize;
-                    info.DownloadPercent = downloadProgress / (double)serverFileLength;
+                    //info.DownloadPercent = downloadProgress / (double)serverFileLength;
                     //OnDownloadInfoChange(info);
                     FStream.Write(btContent, 0, intSize);
                     intSize = myStream.Read(btContent, 0, 512);
