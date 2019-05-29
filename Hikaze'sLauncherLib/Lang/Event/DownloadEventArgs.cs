@@ -7,8 +7,8 @@ namespace LauncherLib.Lang.Event
 {
     internal class DownloadEventArgs:EventArgs
     {
-        public string path;
-        public float DownloadProgress;
+        public string path { get; }
+        public float DownloadProgress { get; }
         public DownloadEventArgs(string _path, float _DownloadProgress)
         {
             path = _path;

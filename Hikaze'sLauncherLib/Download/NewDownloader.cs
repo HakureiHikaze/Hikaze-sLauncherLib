@@ -18,28 +18,7 @@ namespace LauncherLib.Download
         public string url { get; }
         float DownloadProgress;
         public event EventHandler<DownloadEventArgs> DownloadProcessChanged;
-        public bool ChechSHA1()
-        {
-            try
-            {
-                FileStream file = new FileStream(path, FileMode.Open);
-                SHA1 sha1 = new SHA1CryptoServiceProvider();
-                byte[] retval = sha1.ComputeHash(file);
-                file.Close();
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 0; i < retval.Length; i++)
-                {
-                    stringBuilder.Append(retval[i].ToString("x2"));
-                }
-                if (stringBuilder.ToString() == SHA1)   {return true;}
-                else                                    {return false;}
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                return false;
-            }
-        }
+        public event EventHandler<ColoredConsoleEventArgs> DownloadMsgSent;
         public NewDownloader(DownloadTask task)
         {
             DownloadProgress = 0;
@@ -55,6 +34,36 @@ namespace LauncherLib.Download
                 Debug.WriteLine(e.Message);
             }
         }
+        public bool DownloadFileChecked()
+        {
+            bool flag = false;
+            byte RetriedTime = 0;
+            try
+            {
+                while(true)
+                {
+                    if(RetriedTime >=15)
+                    {
+                        _SendColoredMsg("Retried 15 times, shutting down this download task.", ConsoleColor.Red);
+                        flag = false;
+                        break;
+                    }
+                    if(DownloadFile())
+                    {
+                        if(CheckSHA1())
+                        {
+                            flag = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                _SendColoredMsg("Caught exception at NewDownloader.DowwloadFileChecked() :\n\t\t"+e.Message, ConsoleColor.Red);
+            }
+            return flag;
+        }
         public bool DownloadFile()
         {
             bool flag;
@@ -62,7 +71,7 @@ namespace LauncherLib.Download
             long FileLenthFromHttp = GetHttpLength(url);
             if(FileLenthFromHttp != size)
             {
-                Utilities.Utils.ConsoleWriteLineColored(ConsoleColor.Red, "Error: Local-size was dead, mismatch.");
+                _SendColoredMsg("Error: Local-size was dead, mismatch.", ConsoleColor.Red);
             }
             FileStream fileStream = null;
             Stream stream = null;
@@ -107,7 +116,7 @@ namespace LauncherLib.Download
             }
             catch(Exception e)
             {
-                Debug.WriteLine(e.Message);
+                _SendColoredMsg("Caught exception at NewDownloader.DowwloadFile() :\n\t\t" + e.Message, ConsoleColor.Red);
                 flag = false;
             }
             finally
@@ -125,7 +134,29 @@ namespace LauncherLib.Download
             }
             return flag;
         }
-        public static long GetHttpLength(string url)
+        public bool CheckSHA1()
+        {
+            try
+            {
+                FileStream file = new FileStream(path, FileMode.Open);
+                SHA1 sha1 = new SHA1CryptoServiceProvider();
+                byte[] retval = sha1.ComputeHash(file);
+                file.Close();
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int i = 0; i < retval.Length; i++)
+                {
+                    stringBuilder.Append(retval[i].ToString("x2"));
+                }
+                if (stringBuilder.ToString() == SHA1) { return true; }
+                else { return false; }
+            }
+            catch (Exception e)
+            {
+                _SendColoredMsg("Caught exception at NewDownloader.CheckSHA1() :\n\t\t" + e.Message, ConsoleColor.Red);
+                return false;
+            }
+        }
+        public long GetHttpLength(string url)
         {
             long length = 0;
             try
@@ -143,9 +174,13 @@ namespace LauncherLib.Download
             }
             catch (WebException wex)
             {
-                Debug.WriteLine("异常：" + wex.Message);
+                _SendColoredMsg("Caught exception at NewDownloader.GetHttpLenth() :\n\t\t" + wex.Message, ConsoleColor.Red);
                 return 0;
             }
+        }
+        private void _SendColoredMsg(string _message,ConsoleColor _color)
+        {
+            DownloadMsgSent?.Invoke(this, new ColoredConsoleEventArgs(_message, _color));
         }
     }
 }

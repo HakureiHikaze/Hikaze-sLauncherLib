@@ -60,6 +60,7 @@
     <Compile Include="Download\Downloader.cs" />
     <Compile Include="Download\MultiDownloader.cs" />
     <Compile Include="Download\NewDownloader.cs" />
+    <Compile Include="Lang\Event\ColoredConsoleEventArgs.cs" />
     <Compile Include="Lang\Event\DownloadEventArgs.cs" />
     <Compile Include="Lang\Event\MultiDownloadventArgs.cs" />
     <Compile Include="Lang\Exception.cs" />
