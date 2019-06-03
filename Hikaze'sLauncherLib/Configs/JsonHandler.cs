@@ -26,6 +26,8 @@ namespace LauncherLib.Configs
             System.IO.StreamReader JsonFile = System.IO.File.OpenText(path);
             JsonTextReader reader = new JsonTextReader(JsonFile);
             JObject JReading = (JObject)JToken.ReadFrom(reader);
+            JsonFile.Close();
+            JsonFile.Dispose();
             return JReading;
         }
         public static void WriteJson(JObject json,string path)

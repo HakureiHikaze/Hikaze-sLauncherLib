@@ -29,16 +29,19 @@
         private void InitializeComponent()
         {
             this.Exit = new System.Windows.Forms.Button();
+            this.btnStart = new System.Windows.Forms.Button();
+            this.cbbxVersionList = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // Exit
             // 
             this.Exit.BackColor = System.Drawing.Color.Red;
             this.Exit.FlatAppearance.BorderColor = System.Drawing.SystemColors.Highlight;
+            this.Exit.FlatAppearance.BorderSize = 0;
             this.Exit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.Exit.Font = new System.Drawing.Font("Nueva Std", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Exit.ForeColor = System.Drawing.SystemColors.Info;
-            this.Exit.Location = new System.Drawing.Point(702, 12);
+            this.Exit.Location = new System.Drawing.Point(720, 12);
             this.Exit.Name = "Exit";
             this.Exit.Size = new System.Drawing.Size(36, 36);
             this.Exit.TabIndex = 0;
@@ -46,12 +49,40 @@
             this.Exit.UseVisualStyleBackColor = false;
             this.Exit.Click += new System.EventHandler(this.Exit_Click);
             // 
+            // btnStart
+            // 
+            this.btnStart.FlatAppearance.BorderSize = 0;
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStart.Font = new System.Drawing.Font("DejaVu Sans Mono", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnStart.ForeColor = System.Drawing.SystemColors.Info;
+            this.btnStart.Location = new System.Drawing.Point(542, 354);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(214, 66);
+            this.btnStart.TabIndex = 1;
+            this.btnStart.Text = "Link Start!!";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.BtnStart_Click);
+            // 
+            // cbbxVersionList
+            // 
+            this.cbbxVersionList.BackColor = System.Drawing.SystemColors.Window;
+            this.cbbxVersionList.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbbxVersionList.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.cbbxVersionList.ForeColor = System.Drawing.SystemColors.Highlight;
+            this.cbbxVersionList.FormattingEnabled = true;
+            this.cbbxVersionList.Location = new System.Drawing.Point(542, 328);
+            this.cbbxVersionList.Name = "cbbxVersionList";
+            this.cbbxVersionList.Size = new System.Drawing.Size(214, 20);
+            this.cbbxVersionList.TabIndex = 2;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Highlight;
-            this.ClientSize = new System.Drawing.Size(752, 393);
+            this.BackColor = System.Drawing.Color.Black;
+            this.ClientSize = new System.Drawing.Size(768, 432);
+            this.Controls.Add(this.cbbxVersionList);
+            this.Controls.Add(this.btnStart);
             this.Controls.Add(this.Exit);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
@@ -65,5 +96,7 @@
         #endregion
 
         private System.Windows.Forms.Button Exit;
+        private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.ComboBox cbbxVersionList;
     }
 }

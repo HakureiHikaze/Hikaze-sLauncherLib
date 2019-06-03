@@ -37,9 +37,6 @@
     <StartupObject>Hikaze_s_Launcher.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Hikaze%27sLauncherLib">
-      <HintPath>..\Hikaze'sLauncherLib\bin\Release\Hikaze'sLauncherLib.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,6 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FXButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FXForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,6 +88,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Hikaze%27sLauncherLib\Hikaze%27sLauncherLib.csproj">
+      <Project>{dd1e4aa7-8cf0-4631-b414-2879ca80fc0d}</Project>
+      <Name>Hikaze%27sLauncherLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -7,11 +7,11 @@ namespace LauncherLib.Configs
 {
     public class PlayerInfo
     {
-        public readonly string Name;
+        public string Name;
         public readonly string UUID;
         public PlayerInfo(string _Name)
         {
-            UUID = System.Guid.NewGuid().ToString();
+            UUID = Guid.NewGuid().ToString();
             Name = _Name;
         }
         public PlayerInfo(string _Name,string _UUID)

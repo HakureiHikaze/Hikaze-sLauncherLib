@@ -14,7 +14,18 @@ namespace Hikaze_s_Launcher
         Point point;
         Point nowLocaton;
         Point Offset;
+        Action action;
+        public delegate void Initialization();
         internal FXForm()
+        {
+            InitializeEvents();
+        }
+        internal FXForm(Action _action)
+        {
+            action = _action;
+            InitializeEvents();
+        }
+        void InitializeEvents()
         {
             this.MouseDown += FXForm_MouseDown;
             this.MouseMove += FXForm_MouseMove;
@@ -61,6 +72,7 @@ namespace Hikaze_s_Launcher
         }
         private void FXForm_LoadingFX(object sender, System.EventArgs e)
         {
+            if (action != null) { action(); }
             #region Visible FX
             Point newLocation = new Point(Location.X, Location.Y);
             Point oldLocation = new Point(Location.X, Location.Y);

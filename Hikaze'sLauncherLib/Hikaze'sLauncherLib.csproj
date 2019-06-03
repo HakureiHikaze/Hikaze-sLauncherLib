@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArgHandler\ThisGame.cs" />
     <Compile Include="Assets\Assets.cs" />
     <Compile Include="Assets\IAssetsDownload.cs" />
     <Compile Include="Assets\IndexObjects.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Download\NewDownloader.cs" />
     <Compile Include="Lang\Event\ColoredConsoleEventArgs.cs" />
     <Compile Include="Lang\Event\DownloadEventArgs.cs" />
+    <Compile Include="Lang\Event\IntegerMsgArgs.cs" />
     <Compile Include="Lang\Event\MultiDownloadventArgs.cs" />
     <Compile Include="Lang\Exception.cs" />
     <Compile Include="Configs\JsonHandler.cs" />

@@ -26,6 +26,10 @@ namespace LauncherLib.Utilities
                 }
                 else //判断路径中的文件夹是否存在
                 {
+                    if(Directory.Exists(FullPath))
+                    {
+                        return 0;
+                    }
                     string dirpath = FullPath.Substring(0, FullPath.LastIndexOf('\\'));
                     string[] pathes = dirpath.Split('\\');
                     if (pathes.Length > 1)

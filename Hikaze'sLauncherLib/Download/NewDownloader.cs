@@ -18,7 +18,7 @@ namespace LauncherLib.Download
         public string url { get; }
         float DownloadProgress;
         public event EventHandler<DownloadEventArgs> DownloadProcessChanged;
-        public event EventHandler<ColoredConsoleEventArgs> DownloadMsgSent;
+        public static event EventHandler<ColoredConsoleEventArgs> DownloadMsgSent;
         public NewDownloader(DownloadTask task)
         {
             DownloadProgress = 0;
@@ -44,7 +44,7 @@ namespace LauncherLib.Download
                 {
                     if(RetriedTime >=15)
                     {
-                        _SendColoredMsg("Retried 15 times, shutting down this download task.", ConsoleColor.Red);
+                        _SendColoredMsg(this, "Retried 15 times, shutting down this download task.", ConsoleColor.Red);
                         flag = false;
                         break;
                     }
@@ -60,7 +60,7 @@ namespace LauncherLib.Download
             }
             catch(Exception e)
             {
-                _SendColoredMsg("Caught exception at NewDownloader.DowwloadFileChecked() :\n\t\t"+e.Message, ConsoleColor.Red);
+                _SendColoredMsg(this, "Caught exception at NewDownloader.DowwloadFileChecked() :\n\t\t" +e.Message, ConsoleColor.Red);
             }
             return flag;
         }
@@ -71,7 +71,7 @@ namespace LauncherLib.Download
             long FileLenthFromHttp = GetHttpLength(url);
             if(FileLenthFromHttp != size)
             {
-                _SendColoredMsg("Error: Local-size was dead, mismatch.", ConsoleColor.Red);
+                _SendColoredMsg(this, "Error: Local-size was dead, mismatch.", ConsoleColor.Red);
             }
             FileStream fileStream = null;
             Stream stream = null;
@@ -116,7 +116,7 @@ namespace LauncherLib.Download
             }
             catch(Exception e)
             {
-                _SendColoredMsg("Caught exception at NewDownloader.DowwloadFile() :\n\t\t" + e.Message, ConsoleColor.Red);
+                _SendColoredMsg(this,"Caught exception at NewDownloader.DowwloadFile() :\n\t\t" + e.Message, ConsoleColor.Red);
                 flag = false;
             }
             finally
@@ -152,7 +152,7 @@ namespace LauncherLib.Download
             }
             catch (Exception e)
             {
-                _SendColoredMsg("Caught exception at NewDownloader.CheckSHA1() :\n\t\t" + e.Message, ConsoleColor.Red);
+                _SendColoredMsg(this, "Caught exception at NewDownloader.CheckSHA1() :\n\t\t" + e.Message, ConsoleColor.Red);
                 return false;
             }
         }
@@ -174,13 +174,13 @@ namespace LauncherLib.Download
             }
             catch (WebException wex)
             {
-                _SendColoredMsg("Caught exception at NewDownloader.GetHttpLenth() :\n\t\t" + wex.Message, ConsoleColor.Red);
+                _SendColoredMsg(this,"Caught exception at NewDownloader.GetHttpLenth() :\n\t\t" + wex.Message, ConsoleColor.Red);
                 return 0;
             }
         }
-        private void _SendColoredMsg(string _message,ConsoleColor _color)
+        public static void _SendColoredMsg(object sender,string _message,ConsoleColor _color)
         {
-            DownloadMsgSent?.Invoke(this, new ColoredConsoleEventArgs(_message, _color));
+            DownloadMsgSent?.Invoke(sender, new ColoredConsoleEventArgs(_message, _color));
         }
     }
 }
