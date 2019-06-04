@@ -142,10 +142,10 @@ namespace LauncherLib.Utilities
                                 RegistryKey JDK = JavaSoft.OpenSubKey("Java Development Kit");
                                 return JDK.OpenSubKey(JDK.GetValue("CurrentVersion").ToString()).GetValue("JavaHome").ToString() + @"\jre\bin\javaw.exe";
                             }
-                            else return "0";
+                            else continue;
                         }
                     }
-                    else return "0";
+                    else continue;
                 }
                 return "0";
             }

@@ -16,8 +16,8 @@ namespace Hikaze_s_Launcher
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            MainForm backGround = new MainForm();
-            Application.Run(backGround);
+            MainForm mainForm = new MainForm();
+            Application.Run(mainForm);
         }
     }
 }

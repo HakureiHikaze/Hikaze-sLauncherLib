@@ -62,6 +62,7 @@
     <Compile Include="Download\MultiDownloader.cs" />
     <Compile Include="Download\NewDownloader.cs" />
     <Compile Include="Lang\Event\ColoredConsoleEventArgs.cs" />
+    <Compile Include="Lang\Event\ConfigChangedEventArgs.cs" />
     <Compile Include="Lang\Event\DownloadEventArgs.cs" />
     <Compile Include="Lang\Event\IntegerMsgArgs.cs" />
     <Compile Include="Lang\Event\MultiDownloadventArgs.cs" />
