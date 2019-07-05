@@ -7,10 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hikaze'sLauncherLib", "Hika
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{CBF2FC30-2527-4597-BE48-BE00405CF964}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hikaze's Launcher", "Hikaze's Launcher\Hikaze's Launcher.csproj", "{3823AA8A-7686-43EF-8CD0-6B4078267C91}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestForm", "TestForm\TestForm.csproj", "{A555518E-9493-4842-9459-20A95F82A8EA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,14 +21,6 @@ Global
 		{CBF2FC30-2527-4597-BE48-BE00405CF964}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBF2FC30-2527-4597-BE48-BE00405CF964}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBF2FC30-2527-4597-BE48-BE00405CF964}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3823AA8A-7686-43EF-8CD0-6B4078267C91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3823AA8A-7686-43EF-8CD0-6B4078267C91}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3823AA8A-7686-43EF-8CD0-6B4078267C91}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3823AA8A-7686-43EF-8CD0-6B4078267C91}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A555518E-9493-4842-9459-20A95F82A8EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A555518E-9493-4842-9459-20A95F82A8EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A555518E-9493-4842-9459-20A95F82A8EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A555518E-9493-4842-9459-20A95F82A8EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

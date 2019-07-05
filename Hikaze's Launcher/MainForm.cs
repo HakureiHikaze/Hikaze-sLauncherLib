@@ -67,6 +67,8 @@ namespace Hikaze_s_Launcher
             //thisGame.SetPlayerName("Hikaze");
             //thisGame.MakeConfig(@".\HikazeLauncher\Config.json");
             Debug.WriteLine(thisGame.ToString());
+            //thisGame.CheckLocalResources();
+
         }
 
         private void BtnOpenConfig_Click(object sender, EventArgs e)
